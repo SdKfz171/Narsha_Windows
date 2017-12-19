@@ -157,20 +157,20 @@ namespace Narsha_Windows.Views
 
         private void Timer1_Tick(object sender, object e)
         {
-            if (ControlFlag)
-            {
-                Debug.WriteLine(Payload);
-                try
-                {
-                    if (Payload.Equals(null))
-                        Debug.WriteLine("널 값");
-                }
-                catch (Exception ne)
-                {
-                    Debug.WriteLine("널 값");
-                }
+            //if (ControlFlag)
+            //{
+            //    Debug.WriteLine(Payload);
+            //    try
+            //    {
+            //        if (Payload.Equals(null))
+            //            Debug.WriteLine("널 값");
+            //    }
+            //    catch (Exception ne)
+            //    {
+            //        Debug.WriteLine("널 값");
+            //    }
 
-            }
+            //}
 
             //if (beaconControl.Payload == "1JDH" && beaconControl.Rssi < -90)
             //{
@@ -266,15 +266,17 @@ namespace Narsha_Windows.Views
                     //}
                 });
 
-                Debug.WriteLine("Uuid : " + Uuid);
-                Debug.WriteLine("Rssi : " + Rssi);
-                Debug.WriteLine("Major : " + Major);
-                Debug.WriteLine("Minor : " + Convert.ToChar( Minor / 100 ) + Convert.ToChar( Minor % 100 ));
-                Debug.WriteLine("TxPower : " + TxPower);
-                Debug.Write("서비스 UUIDs : ");// + watcher.AdvertisementFilter.Advertisement.ServiceUuids);
-                foreach (var temp in watcher.AdvertisementFilter.Advertisement.ServiceUuids.ToList())
-                    Debug.WriteLine(temp);
+                //Debug.WriteLine("Uuid : " + Uuid);
+                //Debug.WriteLine("Rssi : " + Rssi);
+                //Debug.WriteLine("Major : " + Major);
+                //Debug.WriteLine("Minor : " + Convert.ToChar( Minor / 100 ) + Convert.ToChar( Minor % 100 ));
+                //Debug.WriteLine("TxPower : " + TxPower);
+                //Debug.Write("서비스 UUIDs : ");// + watcher.AdvertisementFilter.Advertisement.ServiceUuids);
 
+                //foreach (var temp in watcher.AdvertisementFilter.Advertisement.ServiceUuids.ToList())
+                //    Debug.WriteLine(temp);
+
+                //Debug.WriteLine(""); //watcher.MinSamplingInterval.Milliseconds
 
             }
         }
@@ -286,12 +288,23 @@ namespace Narsha_Windows.Views
 
         private void Timer_Tick(object sender, object e)
         {
+            string Indicator = string.Format( Convert.ToChar(Minor / 100).ToString() + Convert.ToChar(Minor % 100).ToString());
+
             try
             {
+                if( Indicator == "DY")
+                {
+                    Debug.WriteLine("Uuid : " + Uuid);
+                    Debug.WriteLine("Rssi : " + Rssi);
+                    Debug.WriteLine("Major : " + Major);
+                    Debug.WriteLine("Minor : " + Convert.ToChar(Minor / 100) + Convert.ToChar(Minor % 100));
+                    Debug.WriteLine("TxPower : " + TxPower);
+                }
+
                 
 
                 //if(Payload == "01")
-                    //Debug.WriteLine(Payload);
+                //Debug.WriteLine(Payload);
 
                 //TestModel model = new TestModel { Payload = this.Payload, Rssi = this.Rssi};
 
