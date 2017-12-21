@@ -28,7 +28,7 @@ namespace Narsha_Windows.Views
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private string testMinor = "2317";
+        private string testMinor = "DY";
 
         private DispatcherTimer timer1;
 
@@ -60,6 +60,8 @@ namespace Narsha_Windows.Views
         private Guid TransMitter;
 
         private Guid Mobile;
+
+        private List<int> RssiList = new List<int>();
 
         public int Rssi
         {
@@ -115,33 +117,44 @@ namespace Narsha_Windows.Views
             TransMitter = new Guid("{e2c56db5-dffb-48d2-b060-d0f5a71096e0}");
             Mobile = new Guid("{6c5df2c4-7256-4563-ba20-a2507efed9bb}");
 
-            List<Guid> list = new List<Guid>();
-
-            list.Add(TransMitter); list.Add(Mobile);
-
-            IList<Guid> guidIList = list;
-
             watcher = new BluetoothLEAdvertisementWatcher();
+
+            //watcher.SignalStrengthFilter.SamplingInterval = TimeSpan.FromMilliseconds(200);
+
+            //watcher.AdvertisementFilter.Advertisement.ServiceUuids.Add
 
             var manufacturerData = new BluetoothLEManufacturerData();
 
             manufacturerData.CompanyId = 0x004C;
 
-            
+            DataWriter writer = new DataWriter();
+
+            writer.WriteUInt16(0x0215);
+
+            //writer.WriteUInt64(0xE2C56DB5DFFB48D2);
+            //writer.WriteUInt64(0xB060D0F5A71096E0);
+
+            writer.WriteUInt64(0x6C5DF2C472564563);
+            writer.WriteUInt64(0xBA20A2507EFED9BB);
+
+            manufacturerData.Data = writer.DetachBuffer();
+
+            //watcher.AdvertisementFilter.Advertisement.ServiceUuids.Add(TransMitter);
+
+            //watcher.AdvertisementFilter.Advertisement.ServiceUuids.Add(Mobile);
 
             watcher.AdvertisementFilter.Advertisement.ManufacturerData.Add(manufacturerData);
 
             watcher.SignalStrengthFilter.InRangeThresholdInDBm = -70;
 
             watcher.SignalStrengthFilter.OutOfRangeThresholdInDBm = -75;
-
             
 
             //watcher.MinSamplingInterval.Milliseconds = TimeSpan.FromMilliseconds(200);
 
             //watcher.AdvertisementFilter.Advertisement.ServiceUuids = new IList<Guid> { ""}
 
-            watcher.SignalStrengthFilter.OutOfRangeTimeout = TimeSpan.FromMilliseconds(1000);
+            watcher.SignalStrengthFilter.OutOfRangeTimeout = TimeSpan.FromMilliseconds(2000);
 
             watcher.Stopped += Watcher_Stopped;
             watcher.Received += Watcher_Received;
@@ -204,15 +217,11 @@ namespace Narsha_Windows.Views
                 {
                     try
                     {
-                        Debug.WriteLine(args.BluetoothAddress);
-                        Debug.WriteLine(args.Advertisement.LocalName);
-                        Debug.WriteLine(args.Advertisement.DataSections);
+                        Debug.WriteLine("Bluetooth Address : " + args.BluetoothAddress);
+                        Debug.WriteLine("Local Name : " + args.Advertisement.LocalName);
+                        Debug.WriteLine("Data Sections : " + args.Advertisement.DataSections);
 
-                        this.Rssi = (int)args.RawSignalStrengthInDBm;
-                        //Debug.WriteLine(this.Rssi);
-
-                        this.BeaconData = BitConverter.ToString(data);
-                        //Debug.WriteLine(this.BeaconData);
+                        Rssi = (int)args.RawSignalStrengthInDBm;
 
                         Uuid = new Guid(
                             BitConverter.ToInt32(data.Skip(2).Take(4).Reverse().ToArray(), 0),
@@ -222,61 +231,25 @@ namespace Narsha_Windows.Views
                         Major = BitConverter.ToUInt16(data.Skip(18).Take(2).Reverse().ToArray(), 0);
                         Minor = BitConverter.ToUInt16(data.Skip(20).Take(2).Reverse().ToArray(), 0);
                         TxPower = (sbyte)data[22];
+
+                        if(string.Format(Convert.ToChar(Minor / 100).ToString() + Convert.ToChar(Minor % 100).ToString()) == testMinor)
+                        {
+                            if (RssiList.Count >  4)
+                            {
+                                RssiList.RemoveAt(0);
+                            }
+
+                            RssiList.Add(Rssi);
+                        }
+                        
                     }
-                    catch
+                    catch(ArgumentException ae)
                     {
                         Debug.WriteLine("잘못된 비콘입니다.");
                     }
-                    
-                    
-                    //foreach (var temp in data.ToList<byte>())
-                    //    UUID.Add(temp.ToString("X"));
-
-                    /*
-                     * 
-                     * Example : 비콘 데이타를 Hex 문자열로 변환 해 리스트로 저장하고 데이터가 정상적으로 있으면,
-                     *          (비콘 UUID만 해도 16글자에 Major,Minor 합치면, 4글자)
-                     *          문자열에서 Major, Minor을 따로 빼내서 문자열로 저장해 아스키 Decimal로 저장
-                     *          Decimal을 아스키 문자로 변경해 문자열에 저장(完)
-                     *          
-                    */
-
-                    //if (UUID.Count > 20)
-                    //{
-                    //    string Hex, Major, Minor;
-
-                    //    Hex = string.Format(UUID[18] + UUID[19]);
-
-                    //    Major = Hex;
-
-                    //    CompareCode = Major;
-
-                    //    Hex = string.Format(UUID[20] + UUID[21]);
-
-                    //    Minor = Hex;
-
-                    //    Payload = Minor;
-
-
-                    //}
-
-                    //else
-                    //{
-                    //    Payload = "페이로드 없음";
-                    //}
                 });
 
-                //Debug.WriteLine("Uuid : " + Uuid);
-                //Debug.WriteLine("Rssi : " + Rssi);
-                //Debug.WriteLine("Major : " + Major);
-                //Debug.WriteLine("Minor : " + Convert.ToChar( Minor / 100 ) + Convert.ToChar( Minor % 100 ));
-                //Debug.WriteLine("TxPower : " + TxPower);
-                //Debug.Write("서비스 UUIDs : ");// + watcher.AdvertisementFilter.Advertisement.ServiceUuids);
-
-                //foreach (var temp in watcher.AdvertisementFilter.Advertisement.ServiceUuids.ToList())
-                //    Debug.WriteLine(temp);
-
-                //Debug.WriteLine(""); //watcher.MinSamplingInterval.Milliseconds
+                
 
             }
         }
@@ -292,42 +265,37 @@ namespace Narsha_Windows.Views
 
             try
             {
-                if( Indicator == "DY")
+                if(Indicator == "DY" && Rssi != -127)
                 {
                     Debug.WriteLine("Uuid : " + Uuid);
                     Debug.WriteLine("Rssi : " + Rssi);
                     Debug.WriteLine("Major : " + Major);
                     Debug.WriteLine("Minor : " + Convert.ToChar(Minor / 100) + Convert.ToChar(Minor % 100));
                     Debug.WriteLine("TxPower : " + TxPower);
+                    Debug.WriteLine("SamplingInterval : " + watcher.MaxSamplingInterval.Milliseconds);
                 }
 
-                
-
-                //if(Payload == "01")
-                //Debug.WriteLine(Payload);
-
-                //TestModel model = new TestModel { Payload = this.Payload, Rssi = this.Rssi};
-
-                //BeaconDataList.Items.Add(model);
-
-                //if(Payload == testMinor && Rssi > -127)
-                //    BeaconDataList.Items.Add("Payload : " + Payload + ", Rssi : " + Rssi);
-
-                //TestBlock.Text += "Minor Value : " + Payload + ", Rssi : " + Rssi + "\n";
-
-                if (Payload == testMinor && Rssi < -60 && Rssi > -127)
+                if (Indicator == testMinor && RssiList.Average() <= -55 && Rssi > -127)
                 {
                     Debug.WriteLine("\n\nPC Lock\n\n");
 
                     MainFrame.Navigate(typeof(LockScreenPage));
+
+                    Debug.WriteLine("Rssi List Average : " + RssiList.Average());
+
+                    RssiList.Clear();
                 }
 
-                else if (Payload == testMinor && Rssi > -40 && Rssi > -127)
+                else if (Indicator == testMinor && RssiList.Average() > -42 && Rssi > -127)
                 {
                     Debug.WriteLine("\n\nPC Unlock\n\n");
 
                     MainFrame.Navigate(typeof(LoginPage));
+
+                    RssiList.Clear();
                 }
+
+                
 
             }
             catch (Exception ex)

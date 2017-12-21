@@ -39,7 +39,15 @@ namespace Narsha_Windows.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Debug.WriteLine("유저 ID : " + ((MemberParam)e.Parameter).EmployeeId);
+            if(e.Parameter != null)
+            {
+                Debug.WriteLine("유저 ID : " + ((MemberParam)e.Parameter).EmployeeId);
+            }
+            else
+            {
+
+            }
+            
 
             ///base.OnNavigatedTo(e);
         }

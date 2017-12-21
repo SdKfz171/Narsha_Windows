@@ -12,7 +12,6 @@
 
         <Grid x:Name="SettingGrid" 
               Visibility="Visible"
-              Margin="100"
               HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.3*"/>
@@ -79,7 +78,7 @@
                            VerticalAlignment="Center"
                            FontSize="80dp" FontWeight="Bold">Tue 10 Oct 18:07:54</TextBlock>
 
-                <TextBlock Grid.Row="1" 
+                <!--<TextBlock Grid.Row="1" 
                            VerticalAlignment="Center"
                            FontSize="20dp" Foreground="Gray">Unlock Distance</TextBlock>
 
@@ -101,7 +100,7 @@
                         <TextBlock FontWeight="Bold" TextAlignment="Left">0.3M(-30)</TextBlock>
                         <TextBlock FontWeight="Bold" TextAlignment="Right" HorizontalAlignment="Right" Width="50">5M(-100)</TextBlock>
                     </Grid>
-                </StackPanel>
+                </StackPanel>-->
 
 
                 <Grid Grid.Row="3">
