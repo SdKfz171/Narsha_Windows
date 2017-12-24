@@ -5,16 +5,23 @@ VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Narsha_Windows", "Narsha_Windows\Narsha_Windows.csproj", "{19F605E2-FFED-4A13-A606-D4A412E1B9C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tasks", "..\Windows-universal-samples-master\Samples\BluetoothAdvertisement\cs\Tasks\Tasks.csproj", "{9AD2F276-41C6-5409-B4C2-656DA7E01A67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeaconDataModel", "BeaconDataModel\BeaconDataModel.csproj", "{7B04969E-E590-4A39-98AD-8F3D44D24889}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|ARM = Release|ARM
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Debug|ARM.ActiveCfg = Debug|ARM
 		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Debug|ARM.Build.0 = Debug|ARM
 		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Debug|ARM.Deploy.0 = Debug|ARM
@@ -24,6 +31,7 @@ Global
 		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Debug|x86.ActiveCfg = Debug|x86
 		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Debug|x86.Build.0 = Debug|x86
 		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Debug|x86.Deploy.0 = Debug|x86
+		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Release|Any CPU.ActiveCfg = Release|x86
 		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Release|ARM.ActiveCfg = Release|ARM
 		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Release|ARM.Build.0 = Release|ARM
 		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Release|ARM.Deploy.0 = Release|ARM
@@ -33,6 +41,36 @@ Global
 		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Release|x86.ActiveCfg = Release|x86
 		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Release|x86.Build.0 = Release|x86
 		{19F605E2-FFED-4A13-A606-D4A412E1B9C5}.Release|x86.Deploy.0 = Release|x86
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Debug|ARM.ActiveCfg = Debug|ARM
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Debug|ARM.Build.0 = Debug|ARM
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Debug|x64.ActiveCfg = Debug|x64
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Debug|x64.Build.0 = Debug|x64
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Debug|x86.ActiveCfg = Debug|x86
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Debug|x86.Build.0 = Debug|x86
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Release|Any CPU.ActiveCfg = Release|x86
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Release|ARM.ActiveCfg = Release|ARM
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Release|ARM.Build.0 = Release|ARM
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Release|x64.ActiveCfg = Release|x64
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Release|x64.Build.0 = Release|x64
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Release|x86.ActiveCfg = Release|x86
+		{9AD2F276-41C6-5409-B4C2-656DA7E01A67}.Release|x86.Build.0 = Release|x86
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Debug|ARM.ActiveCfg = Debug|ARM
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Debug|ARM.Build.0 = Debug|ARM
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Debug|x64.ActiveCfg = Debug|x64
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Debug|x64.Build.0 = Debug|x64
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Debug|x86.ActiveCfg = Debug|x86
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Debug|x86.Build.0 = Debug|x86
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Release|ARM.ActiveCfg = Release|ARM
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Release|ARM.Build.0 = Release|ARM
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Release|x64.ActiveCfg = Release|x64
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Release|x64.Build.0 = Release|x64
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Release|x86.ActiveCfg = Release|x86
+		{7B04969E-E590-4A39-98AD-8F3D44D24889}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Background;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
@@ -25,11 +26,6 @@ namespace Narsha_Windows.Views
         private DispatcherTimer timer1;
 
         private bool ControlFlag = false;
-
-
-        /// <summary>
-        /// 
-        /// </summary>
 
         private int rssi;
 
@@ -153,6 +149,8 @@ namespace Narsha_Windows.Views
             watcher.Stopped += Watcher_Stopped;
             watcher.Received += Watcher_Received;
             watcher.Start();
+
+            MainFrame.Navigate(typeof(SettingPage));
         }
 
         //protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -284,7 +282,7 @@ namespace Narsha_Windows.Views
                 {
                     Debug.WriteLine("\n\nPC Unlock\n\n");
 
-                    MainFrame.Navigate(typeof(LoginPage));
+                    MainFrame.Navigate(typeof(SettingPage));
 
                     RssiList.Clear();
                 }

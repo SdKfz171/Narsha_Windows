@@ -39,14 +39,14 @@ namespace Narsha_Windows.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(e.Parameter != null)
-            {
-                Debug.WriteLine("유저 ID : " + ((MemberParam)e.Parameter).EmployeeId);
-            }
-            else
-            {
+            //if(e.Parameter != null)
+            //{
+            //    Debug.WriteLine("유저 ID : " + ((MemberParam)e.Parameter).EmployeeId);
+            //}
+            //else
+            //{
 
-            }
+            //}
             
 
             ///base.OnNavigatedTo(e);
@@ -60,15 +60,22 @@ namespace Narsha_Windows.Views
 
         private void SystemTraySwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            if (SystemTraySwitch.IsOn.Equals(true))
-            {
-                // 시스템 트레이 키기
-            }
+            //BackgroundPage backgroundPage;
+            //if (SystemTraySwitch.IsOn)
+            //    backgroundPage = new BackgroundPage();
+            //else
+            //    backgroundPage = null;
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             //sqlite
+
+            if (SystemTraySwitch.IsOn)
+            {
+                Debug.WriteLine("Parent : " + ((Frame)this.Parent).Name);
+                ((Frame)this.Parent).Navigate(typeof(BackgroundPage));
+            }
         }
 
         private async void ProfilePictureBorder_DragOver(object sender, DragEventArgs e)

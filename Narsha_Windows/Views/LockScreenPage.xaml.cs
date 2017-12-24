@@ -75,10 +75,5 @@ namespace Narsha_Windows.Views
             if(x > 1500 || x < 50)
                 Window.Current.CoreWindow.PointerPosition = SettingPoint;
         }
-
-        private void ExitButton_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Exit();
-        }
     }
 }
