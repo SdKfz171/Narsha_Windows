@@ -44,6 +44,26 @@ namespace Narsha_Windows.Views
             LockScreenImage.ImageSource = bitmap;
 
             ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Tick += Timer_Tick;
+            timer.Start();
+        }
+
+        private void Timer_Tick(object sender, object e)
+        {
+            int hour = DateTime.Now.Hour;
+            int minute = DateTime.Now.Minute;
+            int month = DateTime.Now.Month;
+            int date = int.Parse(DateTime.Now.ToString("dd"));
+
+            TimeBlock.Text = string.Format("{0}:{1}",hour,minute);
+            //DateBlock.Text = string.Format("{0}월 {1}일 {2}요일",month,date,DateTime.);
+        }
+
+        private void GetWeekOfDay()
+        {
+
         }
 
         private void MainGrid_PointerPressed(object sender, PointerRoutedEventArgs e)

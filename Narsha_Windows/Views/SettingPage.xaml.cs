@@ -73,8 +73,7 @@ namespace Narsha_Windows.Views
 
             if (SystemTraySwitch.IsOn)
             {
-                Debug.WriteLine("Parent : " + ((Frame)this.Parent).Name);
-                ((Frame)this.Parent).Navigate(typeof(BackgroundPage));
+
             }
         }
 

@@ -136,13 +136,13 @@ namespace Narsha_Windows.Views
             watcher.SignalStrengthFilter.InRangeThresholdInDBm = -70;
 
             watcher.SignalStrengthFilter.OutOfRangeThresholdInDBm = -75;
-            
+
 
             //watcher.MinSamplingInterval.Milliseconds = TimeSpan.FromMilliseconds(200);
 
             //watcher.AdvertisementFilter.Advertisement.ServiceUuids = new IList<Guid> { ""}
 
-
+            watcher.SignalStrengthFilter.SamplingInterval = TimeSpan.FromMilliseconds(200);
 
             watcher.SignalStrengthFilter.OutOfRangeTimeout = TimeSpan.FromMilliseconds(2000);
 
@@ -150,7 +150,7 @@ namespace Narsha_Windows.Views
             watcher.Received += Watcher_Received;
             watcher.Start();
 
-            MainFrame.Navigate(typeof(SettingPage));
+            MainFrame.Navigate(typeof(NewSettingPage));
         }
 
         //protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -226,7 +226,7 @@ namespace Narsha_Windows.Views
 
                         if(string.Format(Convert.ToChar(Minor / 100).ToString() + Convert.ToChar(Minor % 100).ToString()) == testMinor)
                         {
-                            if (RssiList.Count >  4)
+                            if (RssiList.Count >  6)
                             {
                                 RssiList.RemoveAt(0);
                             }
@@ -257,6 +257,9 @@ namespace Narsha_Windows.Views
 
             try
             {
+                if (Indicator == "YS" && Rssi != -127)
+                    Debug.WriteLine("\n\n\n\nYS DETECTED\n\n\n\n");
+
                 if(Indicator == "DY" && Rssi != -127)
                 {
                     Debug.WriteLine("Uuid : " + Uuid);
@@ -282,7 +285,7 @@ namespace Narsha_Windows.Views
                 {
                     Debug.WriteLine("\n\nPC Unlock\n\n");
 
-                    MainFrame.Navigate(typeof(SettingPage));
+                    MainFrame.Navigate(typeof(NewSettingPage));
 
                     RssiList.Clear();
                 }

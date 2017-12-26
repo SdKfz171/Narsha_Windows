@@ -100,9 +100,6 @@
     <Compile Include="Models\MemberParam.cs" />
     <Compile Include="Models\RssiElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\BackgroundPage.xaml.cs">
-      <DependentUpon>BackgroundPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\LockScreenPage.xaml.cs">
       <DependentUpon>LockScreenPage.xaml</DependentUpon>
     </Compile>
@@ -111,6 +108,9 @@
     </Compile>
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NewSettingPage.xaml.cs">
+      <DependentUpon>NewSettingPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingPage.xaml.cs">
       <DependentUpon>SettingPage.xaml</DependentUpon>
@@ -125,8 +125,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\cat1.gif" />
+    <Content Include="Assets\choiYH1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\DesktopLock.exe" />
+    <Content Include="Assets\choiYH.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\LoginMain.png" />
+    <Content Include="Assets\NarshIcon.png" />
     <Content Include="Assets\user_icon.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
@@ -175,10 +182,6 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\BackgroundPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\LockScreenPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -191,14 +194,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\NewSettingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Windows-universal-samples-master\Samples\BluetoothAdvertisement\cs\Tasks\Tasks.csproj">
-      <Project>{9ad2f276-41c6-5409-b4c2-656da7e01a67}</Project>
+    <ProjectReference Include="..\..\Tasks\Tasks.csproj">
+      <Project>{520ae657-e8c3-54e8-b474-8a9e17916f09}</Project>
       <Name>Tasks</Name>
     </ProjectReference>
   </ItemGroup>
