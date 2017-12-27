@@ -20,8 +20,8 @@
         </Rectangle>
 
         <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="20 0 0 100">
-            <TextBlock Name="TimeBlock" Text="10:14" Foreground="White" FontSize="70" Width="Auto"/>
-            <TextBlock Name="DateBlock" Text="12월 16일 토요일" Foreground="White" FontSize="50" Width="Auto"/>
+            <TextBlock Name="TimeBlock" Text="" Foreground="White" FontSize="120" FontWeight="Light" Width="Auto"/>
+            <TextBlock Name="DateBlock" Text="" Foreground="White" FontSize="50" Width="Auto"/>
         </StackPanel>
     </Grid>
 </Page>

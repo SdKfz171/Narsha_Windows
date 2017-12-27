@@ -5,12 +5,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Xml;
 using Windows.ApplicationModel.Background;
 using Windows.Devices.Bluetooth.Advertisement;
+using Windows.Foundation;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
+using Windows.UI.Notifications;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // 빈 페이지 항목 템플릿에 대한 설명은 https://go.microsoft.com/fwlink/?LinkId=234238에 나와 있습니다.
 
@@ -33,9 +38,14 @@ namespace Narsha_Windows.Views
 
         private DispatcherTimer timer;
 
+        private ApplicationView CurrentApplicationView;
+
         private BluetoothLEAdvertisementWatcher watcher;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        Size size = ((Frame)Window.Current.Content).DesiredSize;
+        Size size2 = new Size(((Frame)Window.Current.Content).ActualWidth, ((Frame)Window.Current.Content).ActualHeight);
 
         public Guid Uuid { get; set; }
 
@@ -90,10 +100,7 @@ namespace Narsha_Windows.Views
         {
             this.InitializeComponent();
 
-            timer1 = new DispatcherTimer();
-
-            timer1.Tick += Timer1_Tick;
-            timer1.Start();
+            //ApplicationView.GetForCurrentView().DesiredBoundsMode
 
             ControlFlag = true;
 
@@ -151,6 +158,48 @@ namespace Narsha_Windows.Views
             watcher.Start();
 
             MainFrame.Navigate(typeof(NewSettingPage));
+
+            Window.Current.CoreWindow.SizeChanged += CoreWindow_SizeChanged;
+            Window.Current.CoreWindow.VisibilityChanged += CoreWindow_VisibilityChanged;
+            Window.Current.Closed += Current_Closed;
+        }
+
+        private async void Current_Closed(object sender, CoreWindowEventArgs e)
+        {
+            Debug.WriteLine("창이 닫김");
+
+            bool modeSwitched = await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
+        }
+
+        private async void CoreWindow_VisibilityChanged(CoreWindow sender, VisibilityChangedEventArgs args)
+        {
+            if (!args.Visible)
+            {
+                Debug.WriteLine("창이 최소화됨");
+
+                bool modeSwitched = await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
+
+                //ViewModePreferences compactOptions = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
+                //compactOptions.ViewSizePreference = ViewSizePreference.Custom;
+                //bool modeSwitched = await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default, compactOptions);
+                //ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+            }
+            
+        }
+
+        private void CoreWindow_SizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)
+        {
+            var appView = ApplicationView.GetForCurrentView();
+
+            CurrentApplicationView = appView;
+
+            if (appView.IsFullScreen)
+            {
+                //maximized
+
+            }
+            
+            args.Handled = true;
         }
 
         //protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -159,35 +208,6 @@ namespace Narsha_Windows.Views
 
         //    base.OnNavigatedTo(e);
         //}
-
-        private void Timer1_Tick(object sender, object e)
-        {
-            //if (ControlFlag)
-            //{
-            //    Debug.WriteLine(Payload);
-            //    try
-            //    {
-            //        if (Payload.Equals(null))
-            //            Debug.WriteLine("널 값");
-            //    }
-            //    catch (Exception ne)
-            //    {
-            //        Debug.WriteLine("널 값");
-            //    }
-
-            //}
-
-            //if (beaconControl.Payload == "1JDH" && beaconControl.Rssi < -90)
-            //{
-            //    Debug.WriteLine("\n\nPC Lock\n\n");
-            //    await Task.Delay(500);
-            //}
-        }
-
-
-
-
-
 
 
         private async void Watcher_Received(BluetoothLEAdvertisementWatcher sender, BluetoothLEAdvertisementReceivedEventArgs args)
@@ -226,7 +246,7 @@ namespace Narsha_Windows.Views
 
                         if(string.Format(Convert.ToChar(Minor / 100).ToString() + Convert.ToChar(Minor % 100).ToString()) == testMinor)
                         {
-                            if (RssiList.Count >  6)
+                            if (RssiList.Count >  4)
                             {
                                 RssiList.RemoveAt(0);
                             }
@@ -251,16 +271,16 @@ namespace Narsha_Windows.Views
             Debug.WriteLine("비콘을 잡을 수 없습니다.");
         }
 
-        private void Timer_Tick(object sender, object e)
+        private async void Timer_Tick(object sender, object e)
         {
             string Indicator = string.Format( Convert.ToChar(Minor / 100).ToString() + Convert.ToChar(Minor % 100).ToString());
 
             try
             {
-                if (Indicator == "YS" && Rssi != -127)
-                    Debug.WriteLine("\n\n\n\nYS DETECTED\n\n\n\n");
+                //if (Indicator == "JH" && Rssi != -127)
+                //    Debug.WriteLine("\n\n\n\n\n\nJH DETECTED\n\n\n\n\n\n");
 
-                if(Indicator == "DY" && Rssi != -127)
+                if(Indicator.Length == 2 && Rssi != -127)
                 {
                     Debug.WriteLine("Uuid : " + Uuid);
                     Debug.WriteLine("Rssi : " + Rssi);
@@ -270,8 +290,49 @@ namespace Narsha_Windows.Views
                     Debug.WriteLine("SamplingInterval : " + watcher.MaxSamplingInterval.Milliseconds);
                 }
 
-                if (Indicator == testMinor && RssiList.Average() <= -55 && Rssi > -127)
+                if (Indicator == testMinor && RssiList.Average() <= -49 && Rssi > -127 && !ControlFlag)
                 {
+                    //bool modeSwitched = await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
+
+                    //ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+
+                    
+
+                    ViewModePreferences compactOptions = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
+                    compactOptions.ViewSizePreference = ViewSizePreference.Default;
+                    //compactOptions.CustomSize = new Size { Width = 3840, Height = 2160};
+
+                    Debug.WriteLine("//////////////////////////////////");
+                    Debug.WriteLine("size 1 : Height = {0}, Width = {1}",size.Height, size.Width);
+                    Debug.WriteLine("");
+                    Debug.WriteLine("");
+                    Debug.WriteLine("size 2 : Height = {0}, Width = {1}", size2.Height, size2.Width);
+                    Debug.WriteLine("//////////////////////////////////");
+
+                    bool modeSwitched = await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, compactOptions);
+                    
+                    //ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+
+                    //modeSwitched = await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
+                    //Window.Current.CoreWindow.Activate();
+                    //if (!Window.Current.CoreWindow.)
+                    //{
+                    //    Debug.WriteLine("Minimize");
+
+                    //    //ApplicationView.TryUnsnap();
+
+                    //    //window.current.corewindow.activate();
+
+                    //    //window.current.corewindow.activate
+
+                    //    //applicationview.preferredlaunchviewsize = new size(480, 800);
+                    //    //applicationview.preferredlaunchwindowingmode = applicationviewwindowingmode.preferredlaunchviewsize;
+
+                    //    //window.current.corewindow.bounds();
+                    //    //applicationview.getforcurrentview().tryenterfullscreenmode();
+                    //    //applicationview.getforcurrentview().
+                    //}
+
                     Debug.WriteLine("\n\nPC Lock\n\n");
 
                     MainFrame.Navigate(typeof(LockScreenPage));
@@ -279,15 +340,26 @@ namespace Narsha_Windows.Views
                     Debug.WriteLine("Rssi List Average : " + RssiList.Average());
 
                     RssiList.Clear();
+
+                    ControlFlag = true;
                 }
 
-                else if (Indicator == testMinor && RssiList.Average() > -42 && Rssi > -127)
+                else if (Indicator == testMinor && RssiList.Average() > -42 && Rssi > -127 && ControlFlag)
                 {
                     Debug.WriteLine("\n\nPC Unlock\n\n");
 
                     MainFrame.Navigate(typeof(NewSettingPage));
 
                     RssiList.Clear();
+
+                    ControlFlag = false;
+
+                    //ToastNotificationManager.CreateToastNotifier()
+
+                    //string s = 
+
+                    //XmlDocument xml = new XmlDocument();
+                    //xml.LoadXml();
                 }
 
                 else if(Indicator != testMinor)

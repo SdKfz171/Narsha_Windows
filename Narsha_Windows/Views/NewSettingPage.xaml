@@ -7,11 +7,19 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     
-    <Page.Background>
-        <ImageBrush ImageSource="ms-appx:///Assets/choiYH.png" Stretch="UniformToFill"/>
-    </Page.Background>
+    
 
     <Grid>
-
+        <Rectangle>
+            <Rectangle.Fill>
+                <ImageBrush ImageSource="ms-appx:///Assets/choiYH.png" Stretch="UniformToFill"/>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Border x:Name="ClockBorder" BorderBrush="Black" BorderThickness="5" Margin="232,446,1180,442">
+            <StackPanel Margin="80 30" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock x:Name="DateBlock" FontSize="40" Foreground="Black" TextAlignment="Center" Text="2017 . 12 . 26"/>
+                <TextBlock x:Name="TimeBlock" FontSize="40" Foreground="Black" TextAlignment="Center" Text="오후 12 : 24 : 37"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Page>

@@ -25,6 +25,30 @@ namespace Narsha_Windows.Views
         public NewSettingPage()
         {
             this.InitializeComponent();
+
+            
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            var BorderHeight = ClockBorder.ActualHeight;
+            var BorderWidth = ClockBorder.ActualWidth;
+
+            var Height = ((Frame)Window.Current.Content).ActualHeight;
+            var Width = ((Frame)Window.Current.Content).ActualWidth;
+
+            //ClockBorder.Margin = new Thickness(200,Height - 500 - BorderHeight,Width - 200 - BorderWidth, 500);
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Tick += Timer_Tick;
+            timer.Start();
+        }
+
+        private void Timer_Tick(object sender, object e)
+        {
+            DateTime CurrentDateTime = DateTime.Now;
+            DateBlock.Text = CurrentDateTime.ToString("yyyy . MM . dd");
+            TimeBlock.Text = CurrentDateTime.ToString("tt hh : mm : ss");
         }
     }
 }

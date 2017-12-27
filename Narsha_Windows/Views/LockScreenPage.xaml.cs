@@ -57,13 +57,39 @@ namespace Narsha_Windows.Views
             int month = DateTime.Now.Month;
             int date = int.Parse(DateTime.Now.ToString("dd"));
 
-            TimeBlock.Text = string.Format("{0}:{1}",hour,minute);
-            //DateBlock.Text = string.Format("{0}월 {1}일 {2}요일",month,date,DateTime.);
+            TimeBlock.Text = string.Format("{0:00}:{1:00}",hour,minute);
+            DateBlock.Text = string.Format("{0}월 {1}일 {2}요일",month,date,GetDayOfWeek(DateTime.Now.DayOfWeek));
         }
 
-        private void GetWeekOfDay()
+        private string GetDayOfWeek(DayOfWeek dayOfWeek)
         {
+            switch (dayOfWeek)
+            {
+                case DayOfWeek.Sunday:
+                    return "일";
 
+                case DayOfWeek.Monday:
+                    return "월";
+
+                case DayOfWeek.Tuesday:
+                    return "화";
+
+                case DayOfWeek.Wednesday:
+                    return "수";
+
+                case DayOfWeek.Thursday:
+                    return "목";
+
+                case DayOfWeek.Friday:
+                    return "금";
+
+                case DayOfWeek.Saturday:
+                    return "토";
+
+                default:
+                    return "";
+
+            }
         }
 
         private void MainGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
