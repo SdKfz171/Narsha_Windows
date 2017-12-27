@@ -8,7 +8,9 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Xml;
 using Windows.ApplicationModel.Background;
 using Windows.Devices.Bluetooth.Advertisement;
+using Windows.Devices.Enumeration;
 using Windows.Foundation;
+using Windows.Media.Capture;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
@@ -16,6 +18,11 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Windows.Storage;
+using Windows.Media.Capture;
+using Windows.Media.MediaProperties;
+using Windows.Storage;
+
 
 // 빈 페이지 항목 템플릿에 대한 설명은 https://go.microsoft.com/fwlink/?LinkId=234238에 나와 있습니다.
 
@@ -26,7 +33,7 @@ namespace Narsha_Windows.Views
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private string testMinor = "DY";
+        private string testMinor = "JH";
 
         private DispatcherTimer timer1;
 
@@ -60,6 +67,8 @@ namespace Narsha_Windows.Views
         private Guid Mobile;
 
         private List<int> RssiList = new List<int>();
+
+        private List<string> DetectedHumanList = new List<string>();
 
         public int Rssi
         {
@@ -140,7 +149,7 @@ namespace Narsha_Windows.Views
 
             watcher.AdvertisementFilter.Advertisement.ManufacturerData.Add(manufacturerData);
 
-            watcher.SignalStrengthFilter.InRangeThresholdInDBm = -70;
+            watcher.SignalStrengthFilter.InRangeThresholdInDBm = -50;
 
             watcher.SignalStrengthFilter.OutOfRangeThresholdInDBm = -75;
 
@@ -243,16 +252,6 @@ namespace Narsha_Windows.Views
                         Major = BitConverter.ToUInt16(data.Skip(18).Take(2).Reverse().ToArray(), 0);
                         Minor = BitConverter.ToUInt16(data.Skip(20).Take(2).Reverse().ToArray(), 0);
                         TxPower = (sbyte)data[22];
-
-                        if(string.Format(Convert.ToChar(Minor / 100).ToString() + Convert.ToChar(Minor % 100).ToString()) == testMinor)
-                        {
-                            if (RssiList.Count >  4)
-                            {
-                                RssiList.RemoveAt(0);
-                            }
-
-                            RssiList.Add(Rssi);
-                        }
                         
                     }
                     catch(ArgumentException ae)
@@ -277,10 +276,15 @@ namespace Narsha_Windows.Views
 
             try
             {
-                //if (Indicator == "JH" && Rssi != -127)
-                //    Debug.WriteLine("\n\n\n\n\n\nJH DETECTED\n\n\n\n\n\n");
+                if (Indicator == testMinor)
+                {
+                    if (RssiList.Count > 4)
+                        RssiList.RemoveAt(0);
 
-                if(Indicator.Length == 2 && Rssi != -127)
+                    RssiList.Add(Rssi);
+                }
+
+                if (Indicator.Length == 2 && Rssi != -127)
                 {
                     Debug.WriteLine("Uuid : " + Uuid);
                     Debug.WriteLine("Rssi : " + Rssi);
@@ -292,46 +296,17 @@ namespace Narsha_Windows.Views
 
                 if (Indicator == testMinor && RssiList.Average() <= -49 && Rssi > -127 && !ControlFlag)
                 {
-                    //bool modeSwitched = await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
+                    //ViewModePreferences compactOptions = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
+                    //compactOptions.ViewSizePreference = ViewSizePreference.Default;
 
-                    //ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+                    //Debug.WriteLine("//////////////////////////////////");
+                    //Debug.WriteLine("size 1 : Height = {0}, Width = {1}",size.Height, size.Width);
+                    //Debug.WriteLine("");
+                    //Debug.WriteLine("");
+                    //Debug.WriteLine("size 2 : Height = {0}, Width = {1}", size2.Height, size2.Width);
+                    //Debug.WriteLine("//////////////////////////////////");
 
-                    
-
-                    ViewModePreferences compactOptions = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
-                    compactOptions.ViewSizePreference = ViewSizePreference.Default;
-                    //compactOptions.CustomSize = new Size { Width = 3840, Height = 2160};
-
-                    Debug.WriteLine("//////////////////////////////////");
-                    Debug.WriteLine("size 1 : Height = {0}, Width = {1}",size.Height, size.Width);
-                    Debug.WriteLine("");
-                    Debug.WriteLine("");
-                    Debug.WriteLine("size 2 : Height = {0}, Width = {1}", size2.Height, size2.Width);
-                    Debug.WriteLine("//////////////////////////////////");
-
-                    bool modeSwitched = await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, compactOptions);
-                    
-                    //ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
-
-                    //modeSwitched = await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
-                    //Window.Current.CoreWindow.Activate();
-                    //if (!Window.Current.CoreWindow.)
-                    //{
-                    //    Debug.WriteLine("Minimize");
-
-                    //    //ApplicationView.TryUnsnap();
-
-                    //    //window.current.corewindow.activate();
-
-                    //    //window.current.corewindow.activate
-
-                    //    //applicationview.preferredlaunchviewsize = new size(480, 800);
-                    //    //applicationview.preferredlaunchwindowingmode = applicationviewwindowingmode.preferredlaunchviewsize;
-
-                    //    //window.current.corewindow.bounds();
-                    //    //applicationview.getforcurrentview().tryenterfullscreenmode();
-                    //    //applicationview.getforcurrentview().
-                    //}
+                    //bool modeSwitched = await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, compactOptions);
 
                     Debug.WriteLine("\n\nPC Lock\n\n");
 
@@ -353,18 +328,52 @@ namespace Narsha_Windows.Views
                     RssiList.Clear();
 
                     ControlFlag = false;
+                    
+                    if(DetectedHumanList.Count != 0)
+                    {
+                        string totalString = "";
 
-                    //ToastNotificationManager.CreateToastNotifier()
+                        string image = "ms-appx:///Assets/warning-sign-30915_960_720.png";
 
-                    //string s = 
+                        foreach (var data in DetectedHumanList)
+                        {
+                            Debug.WriteLine(data);
+                            totalString += data + " ";
+                        }
 
-                    //XmlDocument xml = new XmlDocument();
-                    //xml.LoadXml();
-                }
+                        totalString += "님이 당신의 컴퓨터에 접근하였습니다.";
 
-                else if(Indicator != testMinor)
-                {
+                        //ToastNotificationManager.CreateToastNotifier()
 
+                        //ToastVisual visual = new ToastVisual()
+                        //{
+                        //    BindingGeneric = new ToastBindingGeneric()
+                        //    {
+                        //        Children =
+                        //    {
+                        //        new AdaptiveText()
+                        //        {
+                        //            Text = "이상 접근 감지!"
+                        //        },
+                        //        new AdaptiveText()
+                        //        {
+                        //            Text = totalString
+                        //        },
+                        //        new AdaptiveImage()
+                        //        {
+                        //            Source = image
+                        //        }
+                        //    }
+                        //    }
+                        //};
+                        //ToastNotification toast = new ToastNotification();
+                        //ToastNotificationManager.CreateToastNotifier(visual);
+                    }
+                    else if (Indicator != testMinor && Rssi > -42 && Rssi > -127)
+                    {
+                        DetectedHumanList.Add(Indicator);
+                        //TakePicture(Indicator);
+                    }
                 }
             }
             catch (Exception ex)
@@ -373,5 +382,67 @@ namespace Narsha_Windows.Views
             }
 
         }
+        //private async void TakePicture(string str)
+        //{
+        //    var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
+        //    var device = devices.FirstOrDefault();
+
+        //    if (device == null)
+        //        throw new Exception("No Camera Device");
+
+        //    var media = new MediaCapture();
+
+        //    var settings = new MediaCaptureInitializationSettings();
+        //    settings.StreamingCaptureMode = StreamingCaptureMode.Video;
+        //    settings.VideoDeviceId = devices[0].Id;
+
+        //    try
+        //    {
+        //        await media.InitializeAsync(settings);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Access denied", ex);
+        //    }
+
+
+        //    await media.StartPreviewAsync();
+
+        //    StorageFile storagefile =
+        //    await ApplicationData.Current.LocalFolder.CreateFileAsync(string.Format(str + ".png"),
+        //                                               CreationCollisionOption.ReplaceExisting);
+
+        //    await media.CapturePhotoToStorageFileAsync(ImageEncodingProperties.CreatePng(), storagefile);
+
+        //    //var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
+        //    //var device = devices.FirstOrDefault();
+        //    //if (device == null)
+        //    //    throw new Exception("No Camera Device");
+
+        //    //var media = new MediaCapture();
+
+        //    //var settings = new MediaCaptureInitializationSettings();
+        //    //settings.StreamingCaptureMode = StreamingCaptureMode.Video;
+        //    //settings.VideoDeviceId = devices[0].Id;
+
+        //    //try
+        //    //{
+        //    //    await media.InitializeAsync(settings);
+        //    //}
+        //    //catch (Exception ex)
+        //    //{
+        //    //    throw new Exception("Access denied", ex);
+        //    //}
+
+        //    //await media.StartPreviewAsync();
+
+        //    //StorageFile storagefile =
+        //    //await ApplicationData.Current.LocalFolder.CreateFileAsync(string.Format(str + ".png"),
+        //    //                                           CreationCollisionOption.ReplaceExisting);
+
+        //    //await media.CapturePhotoToStorageFileAsync(ImageEncodingProperties.CreatePng(), storagefile);
+
+
+        //}
     }
 }

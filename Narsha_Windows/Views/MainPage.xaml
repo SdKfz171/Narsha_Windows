@@ -7,8 +7,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <!--<Grid>
+        <CaptureElement x:Name="CapturePreview">
+
+        </CaptureElement>
+
+        <Frame x:Name="MainFrame">
+
+        </Frame>
+    </Grid>-->
+    
     <Frame x:Name="MainFrame">
 
     </Frame>
-    
+
+
+
 </Page>
